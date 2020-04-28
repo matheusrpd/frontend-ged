@@ -1,7 +1,10 @@
-import React, { useCallback } from 'react';
+import React, { useCallback, useRef } from 'react';
+import { FormHandles } from '@unform/core';
 import { Form } from '@unform/web';
 import { FiLock, FiUser } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
+import * as Yup from 'yup';
+import getValidationErrors from '../../utils/getValidationErrors';
 
 import Input from '../../components/Input';
 
@@ -15,17 +18,37 @@ interface LoginFormData {
 }
 
 const Login: React.FC = () => {
+  const formRef = useRef<FormHandles>(null);
   const { login } = useAuth();
   const history = useHistory();
 
   const handleSubmit = useCallback(
     async (data: LoginFormData) => {
-      await login({
-        username: data.username,
-        password: data.password,
-      });
+      try {
+        formRef.current?.setErrors({});
 
-      history.push('/dashboard');
+        const schema = Yup.object().shape({
+          username: Yup.string().required('Username obrigatório'),
+          password: Yup.string().required('Senha obrigatória'),
+        });
+
+        await schema.validate(data, {
+          abortEarly: false,
+        });
+
+        await login({
+          username: data.username,
+          password: data.password,
+        });
+
+        history.push('/dashboard');
+      } catch (error) {
+        if (error instanceof Yup.ValidationError) {
+          const errors = getValidationErrors(error);
+
+          formRef.current?.setErrors(errors);
+        }
+      }
     },
     [login, history],
   );
@@ -42,7 +65,7 @@ const Login: React.FC = () => {
           documentos.
         </p>
 
-        <Form onSubmit={handleSubmit}>
+        <Form onSubmit={handleSubmit} ref={formRef}>
           <Input name="username" icon={FiUser} placeholder="Username" />
           <Input
             name="password"
