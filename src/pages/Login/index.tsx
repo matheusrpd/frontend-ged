@@ -6,10 +6,10 @@ import { useHistory } from 'react-router-dom';
 import * as Yup from 'yup';
 import getValidationErrors from '../../utils/getValidationErrors';
 
-import Input from '../../components/Input';
-
 import { useAuth } from '../../hooks/auth';
 import { useToast } from '../../hooks/toast';
+
+import Input from '../../components/Input';
 
 import { Container, Content, Background } from './styles';
 

@@ -53,6 +53,39 @@ export const Content = styled.div`
     text-align: center;
     margin-top: 64px;
 
+    div {
+      color: #c4c4c4;
+      background: #fff;
+
+      border-radius: 6px;
+      border: 2px solid #c3c3c3;
+      padding: 24px 16px;
+      width: 100%;
+
+      display: flex;
+      align-items: center;
+
+      & + div {
+        margin-top: 16px;
+      }
+    }
+
+    input {
+      flex: 1;
+      font-size: 20px;
+      color: #666;
+      background: transparent;
+      border: 0;
+
+      &::placeholder {
+        color: #c4c4c4;
+      }
+    }
+
+    svg {
+      margin-right: 16px;
+    }
+
     button {
       height: 72px;
       width: 100%;

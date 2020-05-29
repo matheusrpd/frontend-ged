@@ -1,10 +1,4 @@
-import React, {
-  useRef,
-  useState,
-  useEffect,
-  useCallback,
-  InputHTMLAttributes,
-} from 'react';
+import React, { useRef, useEffect, InputHTMLAttributes } from 'react';
 import { useField } from '@unform/core';
 import { IconBaseProps } from 'react-icons';
 import { FiAlertCircle } from 'react-icons/fi';
@@ -14,23 +8,13 @@ import { Container, Error } from './styles';
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   icon?: React.ComponentType<IconBaseProps>;
+  label?: string;
 }
 
-const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
+const Input: React.FC<InputProps> = ({ name, icon: Icon, label, ...rest }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const [isFocused, setIsFocused] = useState(false);
-  const [isFilled, setIsFilled] = useState(false);
   const { fieldName, defaultValue, registerField, error } = useField(name);
-
-  const handleInputFocus = useCallback(() => {
-    setIsFocused(true);
-  }, []);
-
-  const handleInputBlur = useCallback(() => {
-    setIsFocused(false);
-    setIsFilled(!!inputRef.current?.value);
-  }, []);
 
   useEffect(() => {
     registerField({
@@ -41,22 +25,19 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, ...rest }) => {
   }, [fieldName, registerField]);
 
   return (
-    <Container isFocused={isFocused} isFilled={isFilled} isErrored={!!error}>
-      {Icon && <Icon size={24} />}
-      <input
-        ref={inputRef}
-        defaultValue={defaultValue}
-        onFocus={handleInputFocus}
-        onBlur={handleInputBlur}
-        {...rest}
-      />
+    <>
+      {label && <label htmlFor={fieldName}>{label}</label>}
+      <Container>
+        {Icon && <Icon size={24} />}
+        <input ref={inputRef} defaultValue={defaultValue} {...rest} />
 
-      {error && (
-        <Error title={error}>
-          <FiAlertCircle size={20} color="#c53030" />
-        </Error>
-      )}
-    </Container>
+        {error && (
+          <Error title={error}>
+            <FiAlertCircle size={20} color="#E63946" />
+          </Error>
+        )}
+      </Container>
+    </>
   );
 };
 

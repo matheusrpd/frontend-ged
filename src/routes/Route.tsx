@@ -1,8 +1,8 @@
 import React from 'react';
 import {
   Route as ReactDOMRoute,
-  Redirect,
   RouteProps as ReactDOMRuteProps,
+  Redirect,
 } from 'react-router-dom';
 
 import { useAuth } from '../hooks/auth';
@@ -10,10 +10,12 @@ import { useAuth } from '../hooks/auth';
 interface RouteProps extends ReactDOMRuteProps {
   isPrivate?: boolean;
   component: React.ComponentType;
+  layout: React.ComponentType;
 }
 
 const Route: React.FC<RouteProps> = ({
   component: Component,
+  layout: Layout,
   isPrivate = false,
   ...rest
 }) => {
@@ -24,7 +26,9 @@ const Route: React.FC<RouteProps> = ({
       {...rest}
       render={({ location }) => {
         return isPrivate === !!user ? (
-          <Component />
+          <Layout>
+            <Component />
+          </Layout>
         ) : (
           <Redirect
             to={{
