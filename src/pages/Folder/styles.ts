@@ -27,52 +27,32 @@ export const Header = styled.header`
   }
 
   button {
-    height: auto;
-    padding: 12px 30px;
+    font-weight: 600;
+    border-radius: 8px;
+    border: 0;
+    background: #826ce1;
+    color: #fff;
 
     display: flex;
+    flex-direction: row;
     align-items: center;
-    justify-content: center;
+    align-self: flex-end;
 
-    color: #fff;
-    background: #826ce1;
-    text-decoration: none;
-    font-size: 16px;
-    font-weight: 500;
-    border: 0;
-    border-radius: 4px;
-
-    & + button {
-      margin-left: 16px;
+    &:last-child {
+      margin-left: 12px;
     }
 
-    svg {
-      margin-left: 8px;
+    p {
+      padding: 12px 24px;
     }
-  }
-`;
 
-export const ContainerModal = styled.div`
-  width: 100%;
-  height: 100%;
-
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-
-  h2 {
-    margin-bottom: 24px;
-  }
-
-  svg {
-    position: absolute;
-    top: 0;
-    right: 0;
-    background: transparent;
-    margin-right: 15px;
-    margin-top: 15px;
-    cursor: pointer;
+    .icon {
+      display: flex;
+      padding: 12px 16px;
+      background: #9987ed;
+      border-radius: 0 8px 8px 0;
+      margin: 0 auto;
+    }
   }
 `;
 

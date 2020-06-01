@@ -1,12 +1,11 @@
 import React, { useCallback, useEffect, useState } from 'react';
-import { FiFolder, FiMoreHorizontal, FiFolderPlus, FiX } from 'react-icons/fi';
+import { FiFolder, FiMoreHorizontal, FiFolderPlus } from 'react-icons/fi';
 import { useHistory } from 'react-router-dom';
 import api from '../../services/api';
 
-import Modal from '../../components/Modal';
-import FormFolder from '../../components/Forms/FormFolder';
+import ModalAddFolder from '../../components/ModalAddFolder';
 
-import { Container, Folders, Folder, Header, ContainerModal } from './styles';
+import { Container, Folders, Folder, Header } from './styles';
 
 interface FolderProps {
   name: string;
@@ -15,8 +14,7 @@ interface FolderProps {
 
 const MyFolders: React.FC = () => {
   const [folders, setFolders] = useState<FolderProps[]>([]);
-  const [openFolder, setOpenFolder] = useState(false);
-
+  const [openModalFolder, setOpenModalFolder] = useState(false);
   const history = useHistory();
 
   useEffect(() => {
@@ -33,34 +31,31 @@ const MyFolders: React.FC = () => {
   );
 
   const handleModalFolder = useCallback(() => {
-    setOpenFolder(!openFolder);
-  }, [setOpenFolder, openFolder]);
+    setOpenModalFolder(!openModalFolder);
+  }, [setOpenModalFolder, openModalFolder]);
 
-  const handleSubmitFolder = useCallback(
-    async data => {
-      const response = await api.post('/folders/-my-', { name: data.name });
-      setFolders(lastState => [...lastState, response.data]);
-      handleModalFolder();
-    },
-    [handleModalFolder],
-  );
+  const handleAddFolder = useCallback(async data => {
+    const response = await api.post('/folders/-my-', { name: data.name });
+    setFolders(lastState => [...lastState, response.data]);
+  }, []);
 
   return (
     <Container>
       <Header>
         <h1>Minhas pastas</h1>
         <button type="button" onClick={handleModalFolder}>
-          Nova pasta
-          <FiFolderPlus size={16} color="#fff" />
+          <p>Nova pasta</p>
+          <div className="icon">
+            <FiFolderPlus size={24} color="#fff" />
+          </div>
         </button>
-        <Modal open={openFolder}>
-          <ContainerModal>
-            <h2>Adicionar pasta</h2>
-            <FormFolder handleSubmit={handleSubmitFolder} />
-            <FiX size={20} color="#000" onClick={handleModalFolder} />
-          </ContainerModal>
-        </Modal>
       </Header>
+
+      <ModalAddFolder
+        isOpen={openModalFolder}
+        setIsOpen={handleModalFolder}
+        handleAddFolder={handleAddFolder}
+      />
 
       <Folders>
         {folders &&

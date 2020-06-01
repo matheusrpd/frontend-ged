@@ -26,7 +26,11 @@ const Input: React.FC<InputProps> = ({ name, icon: Icon, label, ...rest }) => {
 
   return (
     <>
-      {label && <label htmlFor={fieldName}>{label}</label>}
+      {label && (
+        <label htmlFor={fieldName} style={{ color: '#6C6C80' }}>
+          {label}
+        </label>
+      )}
       <Container>
         {Icon && <Icon size={24} />}
         <input ref={inputRef} defaultValue={defaultValue} {...rest} />

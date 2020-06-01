@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import {
   FiMoreVertical,
-  FiPlus,
-  FiX,
+  FiFilePlus,
   FiFolderPlus,
   FiFolder,
   FiMoreHorizontal,
@@ -10,21 +9,12 @@ import {
 import { useParams, useHistory } from 'react-router-dom';
 import api from '../../services/api';
 
-import Modal from '../../components/Modal';
-import FormFile from '../../components/Forms/FormFile';
-import FormFolder from '../../components/Forms/FormFolder';
+import ModalAddFile from '../../components/ModalAddFile';
+import ModalAddFolder from '../../components/ModalAddFolder';
 
 import PDFImg from '../../assets/pdf.png';
 
-import {
-  Container,
-  Folders,
-  Folder,
-  Files,
-  File,
-  Header,
-  ContainerModal,
-} from './styles';
+import { Container, Folders, Folder, Files, File, Header } from './styles';
 
 interface FolderProps {
   name: string;
@@ -41,18 +31,18 @@ const SimpleFolder: React.FC = () => {
   const [folder, setFolder] = useState<FolderProps>();
   const [folders, setFolders] = useState<FolderProps[]>([]);
   const [files, setFiles] = useState<FileProps[]>([]);
-  const [openFile, setOpenFile] = useState(false);
-  const [openFolder, setOpenFolder] = useState(false);
+  const [openModalFile, setOpenModalFile] = useState(false);
+  const [openModalFolder, setOpenModalFolder] = useState(false);
   const { id } = useParams();
   const history = useHistory();
 
   const handleModalFile = useCallback(() => {
-    setOpenFile(!openFile);
-  }, [setOpenFile, openFile]);
+    setOpenModalFile(!openModalFile);
+  }, [setOpenModalFile, openModalFile]);
 
   const handleModalFolder = useCallback(() => {
-    setOpenFolder(!openFolder);
-  }, [setOpenFolder, openFolder]);
+    setOpenModalFolder(!openModalFolder);
+  }, [setOpenModalFolder, openModalFolder]);
 
   useEffect(() => {
     api.get(`/folders/${id}`).then(response => {
@@ -70,7 +60,7 @@ const SimpleFolder: React.FC = () => {
     });
   }, [id]);
 
-  const handleSubmitFile = useCallback(
+  const handleAddFile = useCallback(
     async data => {
       const formData = new FormData();
 
@@ -83,60 +73,57 @@ const SimpleFolder: React.FC = () => {
 
       const response = await api.post(`/folders/${folder?.id}/files`, formData);
       setFiles(lastState => [...lastState, response.data]);
-      handleModalFile();
     },
-    [handleModalFile, folder],
+    [folder],
   );
 
-  const handleSubmitFolder = useCallback(
+  const handleAddFolder = useCallback(
     async data => {
       const response = await api.post(`/folders/${folder?.id}`, {
         name: data.name,
       });
       setFolders(lastState => [...lastState, response.data]);
-      handleModalFolder();
     },
-    [handleModalFolder, folder],
+    [folder],
   );
 
   const handleNavigate = useCallback(
-    id => {
-      history.push(`/folders/${id}`);
+    idFolder => {
+      history.push(`/folders/${idFolder}`);
     },
     [history],
   );
 
   return (
     <Container>
-      {folder && (
-        <Header>
-          <h1>Minha pasta</h1>
-          <div>
-            <button type="button" onClick={handleModalFile}>
-              Novo arquivo
-              <FiPlus size={16} color="#fff" />
-            </button>
-            <button type="button" onClick={handleModalFolder}>
-              Nova pasta
-              <FiFolderPlus size={16} color="#fff" />
-            </button>
-          </div>
-          <Modal open={openFile}>
-            <ContainerModal>
-              <h2>Adicionar arquivo</h2>
-              <FormFile handleSubmit={handleSubmitFile} />
-              <FiX size={20} color="#000" onClick={handleModalFile} />
-            </ContainerModal>
-          </Modal>
-          <Modal open={openFolder}>
-            <ContainerModal>
-              <h2>Adicionar pasta</h2>
-              <FormFolder handleSubmit={handleSubmitFolder} />
-              <FiX size={20} color="#000" onClick={handleModalFolder} />
-            </ContainerModal>
-          </Modal>
-        </Header>
-      )}
+      <Header>
+        <h1>Minha pasta</h1>
+        <div>
+          <button type="button" onClick={handleModalFile}>
+            <p> Novo arquivo</p>
+            <div className="icon">
+              <FiFilePlus size={24} color="#fff" />
+            </div>
+          </button>
+          <button type="button" onClick={handleModalFolder}>
+            <p>Nova pasta</p>
+            <div className="icon">
+              <FiFolderPlus size={24} color="#fff" />
+            </div>
+          </button>
+        </div>
+      </Header>
+
+      <ModalAddFile
+        isOpen={openModalFile}
+        setIsOpen={handleModalFile}
+        handleAddFile={handleAddFile}
+      />
+      <ModalAddFolder
+        isOpen={openModalFolder}
+        setIsOpen={handleModalFolder}
+        handleAddFolder={handleAddFolder}
+      />
 
       <Folders>
         {folders && <strong>Pastas</strong>}
