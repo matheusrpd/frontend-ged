@@ -39,6 +39,11 @@ const MyFolders: React.FC = () => {
     setFolders(lastState => [...lastState, response.data]);
   }, []);
 
+  const handleMore = useCallback(event => {
+    event.stopPropagation();
+    console.log('1');
+  }, []);
+
   return (
     <Container>
       <Header>
@@ -66,7 +71,11 @@ const MyFolders: React.FC = () => {
                 <span>{folder.name}</span>
                 <small>#Favoritas</small>
               </div>
-              <FiMoreHorizontal size={20} color="#6c7293" />
+              <FiMoreHorizontal
+                size={20}
+                color="#6c7293"
+                onClick={handleMore}
+              />
             </Folder>
           ))}
       </Folders>

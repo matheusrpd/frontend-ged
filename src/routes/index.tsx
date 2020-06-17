@@ -11,6 +11,7 @@ import MyFolders from '../pages/MyFolders';
 import Recent from '../pages/Recent';
 import Stars from '../pages/Stars';
 import Folder from '../pages/Folder';
+import Search from '../pages/Search';
 
 const Routes: React.FC = () => (
   <Switch>
@@ -29,6 +30,7 @@ const Routes: React.FC = () => (
       layout={LayoutApp}
       isPrivate
     />
+    <Route path="/search" component={Search} layout={LayoutApp} isPrivate />
   </Switch>
 );
 

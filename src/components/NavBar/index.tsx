@@ -1,13 +1,21 @@
 import React, { useCallback } from 'react';
 import { FiBell, FiChevronDown, FiSearch } from 'react-icons/fi';
-import api from '../../services/api';
+import { useHistory } from 'react-router-dom';
 
 import { Container, Logo, Content, Profile, Search, InputText } from './styles';
 
 const NavBar: React.FC = () => {
-  const handleSubmit = useCallback(async data => {
-    await api.post('/search', { content: data.search });
-  }, []);
+  const history = useHistory();
+
+  const handleSearch = useCallback(
+    data => {
+      history.push({
+        pathname: '/search',
+        state: data.search,
+      });
+    },
+    [history],
+  );
 
   return (
     <Container>
@@ -17,7 +25,7 @@ const NavBar: React.FC = () => {
         </a>
       </Logo>
       <Content>
-        <Search onSubmit={handleSubmit}>
+        <Search onSubmit={handleSearch}>
           <InputText name="search" placeholder="Pesquisa" />
           <button type="submit">
             <FiSearch size={18} color="#826ce1" />

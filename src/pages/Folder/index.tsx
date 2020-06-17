@@ -130,7 +130,10 @@ const SimpleFolder: React.FC = () => {
         <div>
           {folders &&
             folders.map(findFolder => (
-              <Folder onClick={() => handleNavigate(findFolder.id)}>
+              <Folder
+                onClick={() => handleNavigate(findFolder.id)}
+                key={findFolder.id}
+              >
                 <FiFolder size={20} color="#6c7293" />
                 <div>
                   <span>{findFolder.name}</span>

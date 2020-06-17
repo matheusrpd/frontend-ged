@@ -1,10 +1,13 @@
 import React from 'react';
 import { FiFolder, FiClock, FiStar, FiLogOut } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
+import { useAuth } from '../../hooks/auth';
 
 import { Container, NavBar, NavLink, Profile, Infos } from './styles';
 
 const SideBar: React.FC = () => {
+  const { logout } = useAuth();
+
   return (
     <Container>
       <NavBar>
@@ -34,7 +37,7 @@ const SideBar: React.FC = () => {
           </Link>
         </NavLink>
         <NavLink>
-          <Link to="/">
+          <Link to="/" onClick={logout}>
             <FiLogOut size={18} color="#e63946" />
             <span>Sair</span>
           </Link>

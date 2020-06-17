@@ -14,6 +14,7 @@ interface LoginCredentials {
 interface AuthContextData {
   user: object;
   login(credentials: LoginCredentials): Promise<void>;
+  logout(): Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextData>({} as AuthContextData);
@@ -44,8 +45,15 @@ const AuthProvider: React.FC = ({ children }) => {
     setData({ ticket, user });
   }, []);
 
+  const logout = useCallback(async () => {
+    localStorage.removeItem('@GED:ticket');
+    localStorage.removeItem('@GED:user');
+
+    setData({} as AuthState);
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user: data.user, login }}>
+    <AuthContext.Provider value={{ user: data.user, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
